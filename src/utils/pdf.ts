@@ -35,14 +35,14 @@ async function prepareCyrillicFonts(doc: jsPDF): Promise<boolean> {
   try {
     if (!cachedRobotoRegular) {
       cachedRobotoRegular =
-        (await fetchFontAsBase64('https://cdn.jsdelivr.net/gh/google/fonts@main/ofl/roboto/static/Roboto-Regular.ttf')) ||
-        (await fetchFontAsBase64('https://fonts.gstatic.com/s/roboto/v20/KFOmCnqEu92Fr1Mu4mxP.ttf'));
+        (await fetchFontAsBase64('https://fonts.gstatic.com/s/roboto/v20/KFOmCnqEu92Fr1Mu4mxP.ttf')) ||
+        (await fetchFontAsBase64('https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-Regular.ttf'));
     }
 
     if (!cachedRobotoBold) {
       cachedRobotoBold =
-        (await fetchFontAsBase64('https://cdn.jsdelivr.net/gh/google/fonts@main/ofl/roboto/static/Roboto-Bold.ttf')) ||
-        (await fetchFontAsBase64('https://fonts.gstatic.com/s/roboto/v20/KFOlCnqEu92Fr1MmWUlfBBc9.ttf'));
+        (await fetchFontAsBase64('https://fonts.gstatic.com/s/roboto/v20/KFOlCnqEu92Fr1MmWUlfBBc9.ttf')) ||
+        (await fetchFontAsBase64('https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-Medium.ttf'));
     }
 
     let loadedAny = false;
