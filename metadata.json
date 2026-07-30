@@ -1,0 +1,6 @@
+{
+  "name": "Olimpiade Bahasa Rusia - Moscow Quiz",
+  "description": "Aplikasi Simulasi Olimpiade Bahasa Rusia di Moskow dengan antarmuka modern, audio feedback, pengerjaan kuis interaktif, rekap rekapitulasi, dan papan skor.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
