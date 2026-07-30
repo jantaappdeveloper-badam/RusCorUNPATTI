@@ -66,30 +66,23 @@ export function assignCategory(qText: string, explicitCategory?: string, index?:
   if (explicitCategory && explicitCategory.trim().length > 0) {
     return explicitCategory.trim();
   }
-  const text = qText.toLowerCase();
-  if (text.includes('падеж') || text.includes('родительный') || text.includes('винительный') || text.includes('предложный') || text.includes('род') || text.includes('множественное') || text.includes('касус') || text.includes('kasus')) {
-    return 'Tata Bahasa & Tata Kasus (Грамматика)';
-  }
-  if (text.includes('глагол') || text.includes('говорить') || text.includes('читать') || text.includes('изучаю') || text.includes('конжугаси') || text.includes('соверш')) {
-    return 'Kata Kerja & Konjugasi (Глаголы)';
-  }
-  if (text.includes('кремль') || text.includes('москва') || text.includes('пушкин') || text.includes('собор') || text.includes('истори') || text.includes('город') || text.includes('красная')) {
-    return 'Kebudayaan & Sejarah Rusia (Культура)';
-  }
-  if (text.includes('красивый') || text.includes('здравствуйте') || text.includes('кириллица') || text.includes('значение') || text.includes('слово') || text.includes('означает')) {
-    return 'Kosakata & Frasa Sehari-hari (Лексика)';
+
+  const trimmed = qText.trim();
+  
+  // Extract text inside parentheses after optional number prefix at start of question
+  // e.g. "2. (ARSITEKTUR) Вопрос: ..." or "36. (BAHASA) Вопрос: ..."
+  const match = trimmed.match(/^(?:\d+\.\s*)?\(([^)]+)\)/);
+  if (match && match[1] && match[1].trim().length > 0) {
+    return match[1].trim();
   }
 
-  // Fallback bucket by index chunk if no keywords match
-  const idx = index || 1;
-  const bucket = Math.floor((idx - 1) / 4) % 4;
-  const categories = [
-    'Tata Bahasa & Tata Kasus (Грамматика)',
-    'Kata Kerja & Konjugasi (Глаголы)',
-    'Kosakata & Frasa Sehari-hari (Лексика)',
-    'Kebudayaan & Sejarah Rusia (Культура)'
-  ];
-  return categories[bucket];
+  // General match for uppercase category in parentheses near start
+  const generalMatch = trimmed.match(/\(([A-ZА-Я0-9\s&/-]{2,})\)/);
+  if (generalMatch && generalMatch[1] && generalMatch[1].trim().length > 0) {
+    return generalMatch[1].trim();
+  }
+
+  return 'UMUM';
 }
 
 export async function fetchQuestions(): Promise<Question[]> {
