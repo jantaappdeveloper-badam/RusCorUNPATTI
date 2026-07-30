@@ -3,108 +3,73 @@ import { Question, LeaderboardEntry } from '../types';
 export const FALLBACK_QUESTIONS: Question[] = [
   {
     id: 1,
-    question: "Manakah bentuk Genitiv (родительный падеж) tunggal yang benar untuk kata 'Москва'?",
-    correct: "Москвы",
-    wrong: ["Москве", "Москву", "Москвой"],
+    question: "36. (BAHASA) Вопрос: Падеж для «кто?»? Terjemahan: Kasus apa yang menjawab pertanyaan siapa?",
+    correct: "Именительный (Nominatif)",
+    wrong: ["Родительный (Genitif)", "Дательный (Datif)", "Винительный (Akusatif)"],
     category: "Tata Bahasa & Tata Kasus (Грамматика)"
   },
   {
     id: 2,
-    question: "Kata benda 'Книга' dalam bahasa Rusia termasuk jenis kelamin (род):",
-    correct: "Женский род",
-    wrong: ["Мужской род", "Средний род", "Общий род"],
-    category: "Tata Bahasa & Tata Kasus (Грамматика)"
+    question: "2. (ARSITEKTUR) Вопрос: Какой собор в Москве известен разноцветными куполами? Terjemahan: Katedral di Moskow dengan kubah warna-warni?",
+    correct: "Собор Василия Блаженного (Katedral St. Basil)",
+    wrong: ["Храм Христа Спасителя (Katedral Kristus Juru Selamat)", "Успенский собор (Katedral Assumption)", "Благовещенский собор (Katedral Annunciation)"],
+    category: "Kebudayaan & Sejarah Rusia (Культура)"
   },
   {
     id: 3,
-    question: "Bentuk plural (множественное число) dari kata 'Студент' adalah:",
-    correct: "Студенты",
-    wrong: ["Студента", "Студентам", "Студентов"],
-    category: "Tata Bahasa & Tata Kasus (Грамматика)"
+    question: "48. (BUDAYA) Вопрос: Как называется танец с присядкой? Terjemahan: Tarian rakyat dengan gerakan jongkok?",
+    correct: "Камаринская (Kamrinskaya)",
+    wrong: ["Вальс (Waltz)", "Полька (Polka)", "Танго (Tango)"],
+    category: "Kebudayaan & Sejarah Rusia (Культура)"
   },
   {
     id: 4,
-    question: "Manakah bentuk Предложный падеж (Prepositional case) dari 'Россия' dalam frasa 'в ...'?",
-    correct: "в России",
-    wrong: ["в Россию", "в Россией", "в Россия"],
-    category: "Tata Bahasa & Tata Kasus (Грамматика)"
+    question: "49. (BUDAYA) Вопрос: Что такое русская баня? Terjemahan: Apa itu pemandian Rusia (banya)?",
+    correct: "Парная с вениками (Ruang uap dengan sapu daun birch)",
+    wrong: ["Бассейн (Kolam renang)", "Сауна без пара (Sauna tanpa uap)", "Джакузи (Jacuzzi)"],
+    category: "Kebudayaan & Sejarah Rusia (Культура)"
   },
   {
     id: 5,
-    question: "Lengkapi kalimat: 'Мы ждём ... на станции метро.' (Akusatif / Винительный)",
-    correct: "друга",
-    wrong: ["друг", "другу", "другом"],
-    category: "Tata Bahasa & Tata Kasus (Грамматика)"
+    question: "50. (BUDAYA) Вопрос: Какое дерево — неофициальный символ России? Terjemahan: Pohon symbol tidak resmi Rusia?",
+    correct: "Берёза (Pohon birch)",
+    wrong: ["Сосна (Pinus)", "Дуб (Oak)", "Кедр (Cedar)"],
+    category: "Kebudayaan & Sejarah Rusia (Культура)"
   },
   {
     id: 6,
-    question: "Lengkapi kalimat berikut: 'Я изучаю русский язык ..., чтобы поехать в Россию.'",
-    correct: "усердно",
-    wrong: ["усердный", "усердная", "усердные"],
+    question: "397. (TRADISI) Вопрос: Какой обряд сопровождается песнями и плясками на русской свадьбе? Terjemahan: Upacara apa yang diiringi lagu dan tarian di pernikahan Rusia?",
+    correct: "Свадебный пир (Pesta pernikahan)",
+    wrong: ["Выкуп невесты (Tebusan mempelai)", "Венчание (Pernikahan gereja)", "Каравай (Roti pernikahan)"],
     category: "Kata Kerja & Konjugasi (Глаголы)"
   },
   {
     id: 7,
-    question: "Manakah pasangan kata kerja (глагол) beraspek imperfektif dan perfektif yang benar untuk 'Membaca'?",
-    correct: "Читать / Прочитать",
-    wrong: ["Писать / Написать", "Говорить / Сказать", "Учить / Изучить"],
+    question: "398. (TRADISI) Вопрос: Какой салат считается праздничным в России? Terjemahan: Salad apa yang dianggap sebagai hidangan pesta di Rusia?",
+    correct: "Оливье (Olivier)",
+    wrong: ["Винегрет (Vinaigrette)", "Селедка под шубой (Ikan haring di bawah mantel)", "Греческий (Yunani)"],
     category: "Kata Kerja & Konjugasi (Глаголы)"
   },
   {
     id: 8,
-    question: "Konjugasi kata kerja 'говорить' untuk subjek 'Мы' adalah:",
-    correct: "говорим",
-    wrong: ["говорю", "говоришь", "говорят"],
+    question: "399. (TRADISI) Вопрос: Какой напиток на Руси пили из самовара? Terjemahan: Minuman apa yang diminum dari samovar di Rus?",
+    correct: "Чай (Teh)",
+    wrong: ["Кофе (Kopi)", "Квас (Kvass)", "Сбитень (Sbiten)"],
     category: "Kata Kerja & Konjugasi (Глаголы)"
   },
   {
     id: 9,
-    question: "Apa arti dari ungkapan bahasa Rusia 'Здравствуйте'?",
-    correct: "Halo / Semoga Anda Sehat (Salam Formal)",
-    wrong: ["Selamat Tinggal", "Terima Kasih Banyak", "Selamat Pagi Pertama"],
+    question: "400. (TRADISI) Вопрос: Какой праздник в России символизирует проводы зимы? Terjemahan: Hari raya apa di Rusia yang melambangkan perpisahan dengan musim dingin?",
+    correct: "Масленица (Maslenitsa)",
+    wrong: ["Пасха (Paskah)", "Новый год (Tahun Baru)", "Иван Купала (Ivan Kupala)"],
     category: "Kosakata & Frasa Sehari-hari (Лексика)"
   },
   {
     id: 10,
-    question: "Apa sinonim kata 'Красивый' dalam bahasa Rusia?",
-    correct: "Прекрасный",
-    wrong: ["Плохой", "Быстрый", "Маленький"],
+    question: "12. (GEOGRAFI) Вопрос: Какая река — самая длинная в Европе? Terjemahan: Sungai mana yang terpanjang di Eropa?",
+    correct: "Волга (Volga)",
+    wrong: ["Дон (Don)", "Днепр (Dnieper)", "Урал (Ural)"],
     category: "Kosakata & Frasa Sehari-hari (Лексика)"
-  },
-  {
-    id: 11,
-    question: "Apa sebutan untuk huruf-huruf abjad yang digunakan dalam bahasa Rusia?",
-    correct: "Кириллица (Cyrillic)",
-    wrong: ["Латиница (Latin)", "Глаголица", "Арабский"],
-    category: "Kosakata & Frasa Sehari-hari (Лексика)"
-  },
-  {
-    id: 12,
-    question: "Di kota manakah Olimpiade Bahasa Rusia tingkat internasional ini secara historis berpusat?",
-    correct: "Москва",
-    wrong: ["Санкт-Петербург", "Казань", "Новосибирск"],
-    category: "Kebudayaan & Sejarah Rusia (Культура)"
-  },
-  {
-    id: 13,
-    question: "Siapakah penyair nasional legendaris Rusia yang dianggap sebagai bapak Bahasa Rusia Modern?",
-    correct: "Александр Пушкин",
-    wrong: ["Лев Толстой", "Фёдор Достоевский", "Антон Чехов"],
-    category: "Kebudayaan & Sejarah Rusia (Культура)"
-  },
-  {
-    id: 14,
-    question: "Nama bangunan bersejarah dan istana benteng utama di pusat kota Moskow adalah:",
-    correct: "Московский Кремль",
-    wrong: ["Эрмитаж", "Петергоф", "Большой театр"],
-    category: "Kebudayaan & Sejarah Rusia (Культура)"
-  },
-  {
-    id: 15,
-    question: "Bangunan gereja terkenal di Красная площадь (Red Square) dengan kubah berwarna-warni adalah:",
-    correct: "Собор Василия Блаженного",
-    wrong: ["Храм Христа Спасителя", "Исаакиевский собор", "Казанский собор"],
-    category: "Kebudayaan & Sejarah Rusia (Культура)"
   }
 ];
 
