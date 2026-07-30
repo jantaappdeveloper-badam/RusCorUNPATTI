@@ -236,6 +236,7 @@ export default function App() {
               userAnswers={userAnswers}
               onRestartQuiz={handleStartQuiz}
               onNavigate={(view) => setCurrentView(view)}
+              onLogout={handleLogout}
             />
           )}
 

@@ -116,10 +116,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   soundEngine.playClickSound();
                   onNavigate('leaderboard');
                 }}
-                className="w-full bg-white/10 hover:bg-white/20 text-white font-semibold py-2.5 px-4 rounded-xl text-xs flex items-center justify-center gap-2 border border-white/20 transition-all"
+                className="w-full bg-amber-400 hover:bg-amber-300 text-slate-900 font-extrabold py-3 px-4 rounded-xl text-sm md:text-base flex items-center justify-center gap-2 shadow-md transition-all cursor-pointer hover:scale-[1.01]"
                 id="dashboard-leaderboard-btn"
               >
-                <Award className="w-4 h-4 text-sky-200" />
+                <Award className="w-5 h-5 text-slate-900" />
                 <span>Lihat Papan Skor Peserta</span>
               </button>
             </div>

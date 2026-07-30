@@ -88,16 +88,25 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess, onShowModa
         </div>
 
         {/* Form Input Box */}
-        <div className="relative z-10 max-w-md mx-auto space-y-2.5">
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleLogin();
+          }}
+          autoComplete="off"
+          className="relative z-10 max-w-md mx-auto space-y-2.5"
+        >
           <div className="relative">
             <input
               type="text"
               id="username-input"
+              name="no-autocomplete-username"
+              autoComplete="off"
+              autoCorrect="off"
+              autoCapitalize="off"
+              spellCheck={false}
               value={usernameInput}
               onChange={(e) => setUsernameInput(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') handleLogin();
-              }}
               placeholder="Masukkan Username Anda..."
               className="w-full bg-slate-50 border border-slate-200 text-[#0F172A] placeholder-slate-400 rounded-xl px-4 py-3 text-center text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-[#4F46E5] focus:border-[#4F46E5] shadow-sm transition-all font-semibold"
             />
@@ -113,10 +122,10 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess, onShowModa
           </div>
 
           <button
-            onClick={() => handleLogin()}
+            type="submit"
             disabled={isLoading}
             id="login-submit-btn"
-            className="w-full bg-[#4F46E5] hover:bg-[#4338CA] text-white font-bold py-3 px-5 rounded-xl text-base flex items-center justify-center gap-2 transition-all disabled:opacity-50 shadow-sm"
+            className="w-full bg-[#4F46E5] hover:bg-[#4338CA] text-white font-bold py-3 px-5 rounded-xl text-base flex items-center justify-center gap-2 transition-all disabled:opacity-50 shadow-sm cursor-pointer"
           >
             {isLoading ? (
               <>
@@ -130,7 +139,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess, onShowModa
               </>
             )}
           </button>
-        </div>
+        </form>
       </div>
 
       {/* Embedded Papan Skor on Front Page */}

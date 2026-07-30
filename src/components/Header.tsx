@@ -82,14 +82,14 @@ export const Header: React.FC<HeaderProps> = ({
                   soundEngine.playClickSound();
                   onNavigate('leaderboard');
                 }}
-                className={`px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold flex items-center gap-1.5 transition-all ${
+                className={`px-3.5 py-2 rounded-xl text-xs sm:text-sm font-extrabold flex items-center gap-1.5 transition-all cursor-pointer ${
                   currentView === 'leaderboard'
-                    ? 'bg-[#4F46E5] text-white shadow-sm'
-                    : 'bg-slate-50 hover:bg-slate-100 text-[#64748B] border border-slate-200 hover:text-[#0F172A]'
+                    ? 'bg-amber-400 text-slate-900 shadow-md ring-2 ring-amber-300'
+                    : 'bg-amber-400 hover:bg-amber-300 text-slate-900 shadow-sm'
                 }`}
                 id="header-leaderboard-btn"
               >
-                <Award className="w-4 h-4" />
+                <Award className="w-4 h-4 text-slate-900" />
                 <span className="hidden sm:inline">Papan Skor</span>
               </button>
 

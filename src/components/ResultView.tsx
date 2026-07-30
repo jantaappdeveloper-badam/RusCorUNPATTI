@@ -4,7 +4,7 @@ import { soundEngine } from '../utils/audio';
 import { calculateRussianGrade } from '../utils/grade';
 import { generateEvaluasiPDF } from '../utils/pdf';
 import confetti from 'canvas-confetti';
-import { Award, Download, RotateCcw, ChevronDown, ChevronUp, CheckCircle2, XCircle, Clock, Sparkles, Printer, FolderCheck, FileText } from 'lucide-react';
+import { Award, Download, RotateCcw, ChevronDown, ChevronUp, CheckCircle2, XCircle, Clock, Sparkles, Printer, FolderCheck, FileText, LogOut } from 'lucide-react';
 
 interface ResultViewProps {
   currentUser: User | null;
@@ -14,6 +14,7 @@ interface ResultViewProps {
   userAnswers: AnswerRecord[];
   onRestartQuiz: () => void;
   onNavigate: (view: ViewMode) => void;
+  onLogout?: () => void;
 }
 
 export const ResultView: React.FC<ResultViewProps> = ({
@@ -24,6 +25,7 @@ export const ResultView: React.FC<ResultViewProps> = ({
   userAnswers,
   onRestartQuiz,
   onNavigate,
+  onLogout,
 }) => {
   const [showReview, setShowReview] = useState(false);
 
@@ -200,6 +202,19 @@ export const ResultView: React.FC<ResultViewProps> = ({
 
           {/* Action Buttons */}
           <div className="flex flex-wrap gap-2.5 justify-center">
+            {/* Bright & Colorful Papan Skor Button */}
+            <button
+              onClick={() => {
+                soundEngine.playClickSound();
+                onNavigate('leaderboard');
+              }}
+              className="bg-amber-400 hover:bg-amber-300 text-slate-900 font-extrabold py-2.5 px-4.5 rounded-xl text-xs md:text-sm flex items-center gap-1.5 shadow-md hover:shadow-lg transition-all hover:scale-[1.02] cursor-pointer"
+              id="result-leaderboard-btn"
+            >
+              <Award className="w-4 h-4 text-slate-900" />
+              <span>Lihat Papan Skor</span>
+            </button>
+
             <button
               onClick={async () => {
                 soundEngine.playClickSound();
@@ -212,7 +227,7 @@ export const ResultView: React.FC<ResultViewProps> = ({
                   categorySummary
                 );
               }}
-              className="bg-[#4F46E5] hover:bg-[#4338CA] text-white font-bold py-2.5 px-4 rounded-xl text-xs md:text-sm flex items-center gap-1.5 shadow-sm transition-all"
+              className="bg-[#4F46E5] hover:bg-[#4338CA] text-white font-bold py-2.5 px-4 rounded-xl text-xs md:text-sm flex items-center gap-1.5 shadow-sm transition-all cursor-pointer"
               id="download-evaluasi-pdf-btn"
             >
               <FileText className="w-4 h-4 text-white" />
@@ -221,7 +236,7 @@ export const ResultView: React.FC<ResultViewProps> = ({
 
             <button
               onClick={handleDownloadTXT}
-              className="bg-slate-50 hover:bg-slate-100 text-[#0F172A] font-semibold py-2.5 px-4 rounded-xl text-xs md:text-sm flex items-center gap-1.5 border border-slate-200"
+              className="bg-slate-50 hover:bg-slate-100 text-[#0F172A] font-semibold py-2.5 px-4 rounded-xl text-xs md:text-sm flex items-center gap-1.5 border border-slate-200 cursor-pointer"
               id="download-result-btn"
             >
               <Download className="w-4 h-4 text-[#4F46E5]" />
@@ -230,7 +245,7 @@ export const ResultView: React.FC<ResultViewProps> = ({
 
             <button
               onClick={handlePrint}
-              className="bg-slate-50 hover:bg-slate-100 text-[#0F172A] font-semibold py-2.5 px-4 rounded-xl text-xs md:text-sm flex items-center gap-1.5 border border-slate-200"
+              className="bg-slate-50 hover:bg-slate-100 text-[#0F172A] font-semibold py-2.5 px-4 rounded-xl text-xs md:text-sm flex items-center gap-1.5 border border-slate-200 cursor-pointer"
               id="print-result-btn"
             >
               <Printer className="w-4 h-4 text-[#4F46E5]" />
@@ -240,26 +255,29 @@ export const ResultView: React.FC<ResultViewProps> = ({
             <button
               onClick={() => {
                 soundEngine.playClickSound();
-                onNavigate('leaderboard');
-              }}
-              className="bg-slate-50 hover:bg-slate-100 text-[#0F172A] font-semibold py-2.5 px-4 rounded-xl text-xs md:text-sm flex items-center gap-1.5 border border-slate-200"
-              id="result-leaderboard-btn"
-            >
-              <Award className="w-4 h-4 text-[#4F46E5]" />
-              <span>Papan Skor</span>
-            </button>
-
-            <button
-              onClick={() => {
-                soundEngine.playClickSound();
                 onRestartQuiz();
               }}
-              className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-4 rounded-xl text-xs md:text-sm flex items-center gap-1.5 shadow-sm"
+              className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-4 rounded-xl text-xs md:text-sm flex items-center gap-1.5 shadow-sm transition-all cursor-pointer"
               id="restart-quiz-btn"
             >
               <RotateCcw className="w-4 h-4" />
               <span>Coba Lagi</span>
             </button>
+
+            {/* Tombol Keluar setelah melihat skor */}
+            {onLogout && (
+              <button
+                onClick={() => {
+                  soundEngine.playClickSound();
+                  onLogout();
+                }}
+                className="bg-rose-600 hover:bg-rose-700 text-white font-bold py-2.5 px-4 rounded-xl text-xs md:text-sm flex items-center gap-1.5 shadow-sm transition-all cursor-pointer"
+                id="result-logout-btn"
+              >
+                <LogOut className="w-4 h-4" />
+                <span>Keluar</span>
+              </button>
+            )}
           </div>
         </div>
       </div>

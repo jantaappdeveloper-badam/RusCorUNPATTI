@@ -206,7 +206,7 @@ export const QuizView: React.FC<QuizViewProps> = ({
     const updatedAnswers = [...userAnswers, record];
     setUserAnswers(updatedAnswers);
 
-    // Delay briefly for visual feedback
+    // Delay for clear visual feedback so user can see correct (green) & wrong (red)
     setTimeout(() => {
       const nextIndex = currentIndex + 1;
       if (nextIndex < questions.length) {
@@ -234,7 +234,7 @@ export const QuizView: React.FC<QuizViewProps> = ({
         if (timerRef.current) clearInterval(timerRef.current);
         onFinishQuiz(score + (isCorrect ? 1 : 0), elapsedSeconds, updatedAnswers);
       }
-    }, 450);
+    }, 900);
   };
 
   const handleContinueToNextCategory = () => {
@@ -333,13 +333,19 @@ export const QuizView: React.FC<QuizViewProps> = ({
             let btnStyle = 'bg-white border border-slate-200 text-[#0F172A] hover:bg-slate-50 hover:border-slate-300';
             let badgeStyle = 'bg-indigo-50 text-[#4F46E5] border border-indigo-100';
 
-            if (isSelected) {
-              if (opt.isCorrect) {
-                btnStyle = 'bg-emerald-50 border-2 border-emerald-500 text-emerald-950 shadow-sm';
+            if (isAnswering) {
+              if (isSelected) {
+                if (opt.isCorrect) {
+                  btnStyle = 'bg-emerald-50 border-2 border-emerald-500 text-emerald-950 shadow-sm font-bold';
+                  badgeStyle = 'bg-emerald-500 text-white';
+                } else {
+                  btnStyle = 'bg-rose-50 border-2 border-rose-500 text-rose-950 shadow-sm font-bold';
+                  badgeStyle = 'bg-rose-500 text-white';
+                }
+              } else if (opt.isCorrect) {
+                // Also highlight correct answer in GREEN if user picked wrong option
+                btnStyle = 'bg-emerald-50 border-2 border-emerald-500 text-emerald-950 shadow-sm font-bold animate-pulse';
                 badgeStyle = 'bg-emerald-500 text-white';
-              } else {
-                btnStyle = 'bg-rose-50 border-2 border-rose-500 text-rose-950 shadow-sm';
-                badgeStyle = 'bg-rose-500 text-white';
               }
             }
 
@@ -362,13 +368,13 @@ export const QuizView: React.FC<QuizViewProps> = ({
                   {opt.text}
                 </span>
 
-                {isSelected && (
+                {isAnswering && (
                   <span className="shrink-0">
                     {opt.isCorrect ? (
                       <CheckCircle className="w-5 h-5 text-emerald-600" />
-                    ) : (
+                    ) : isSelected ? (
                       <XCircle className="w-5 h-5 text-rose-600" />
-                    )}
+                    ) : null}
                   </span>
                 )}
               </button>
