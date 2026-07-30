@@ -42,17 +42,43 @@ function doPost(e) {
     var sheet = spreadsheet.getSheetByName('Scoreboard') || spreadsheet.getSheets()[0];
     
     if (params.action === 'addScore') {
-      sheet.appendRow([
+      var data = sheet.getDataRange().getValues();
+      var newUserKey = (params.data.username || params.data.namaLengkap || '').toString().toLowerCase().trim();
+      var newBenar = parseInt(params.data.benar, 10) || 0;
+      var newWaktu = parseInt(params.data.waktu, 10) || 0;
+      var foundRowIndex = -1;
+      var existingBenar = -1;
+      var existingWaktu = 999999;
+
+      for (var i = 1; i < data.length; i++) {
+        var rowUserKey = (data[i][3] || data[i][1] || '').toString().toLowerCase().trim();
+        if (rowUserKey === newUserKey && rowUserKey !== '') {
+          foundRowIndex = i + 1;
+          existingBenar = parseInt(data[i][4], 10) || 0;
+          existingWaktu = parseInt(data[i][6], 10) || 0;
+          break;
+        }
+      }
+
+      var newRowData = [
         params.data.peringkat || "-",
         params.data.namaLengkap || "-",
         params.data.gradeRusia || "-",
         params.data.username || "-",
-        params.data.benar || 0,
-        params.data.totalSoal || 0,
-        params.data.waktu || 0,
+        newBenar,
+        params.data.totalSoal || 10,
+        newWaktu,
         params.data.status || "Selesai",
         params.data.tanggalSelesai || new Date().toLocaleString('id-ID')
-      ]);
+      ];
+
+      if (foundRowIndex > -1) {
+        if (newBenar > existingBenar || (newBenar === existingBenar && newWaktu < existingWaktu)) {
+          sheet.getRange(foundRowIndex, 1, 1, newRowData.length).setValues([newRowData]);
+        }
+      } else {
+        sheet.appendRow(newRowData);
+      }
     } else if (params.action === 'deleteRow') {
       sheet.deleteRow(params.rowIndex);
     } else if (params.action === 'resetBoard') {
@@ -67,7 +93,7 @@ function doPost(e) {
   }
   return ContentService.createTextOutput(JSON.stringify(response))
     .setMimeType(ContentService.MimeType.JSON);
-}`;
+};`;
 
 const DEFAULT_INDEX_HTML = `<!DOCTYPE html>
 <html lang="id">
@@ -439,7 +465,8 @@ export const AdminView: React.FC<AdminViewProps> = ({
           headers: { 'Content-Type': 'text/plain' },
           body: JSON.stringify({ action: 'resetBoard' }),
         });
-        onShowModal('Permintaan Dikirim', 'Perintah reset papan skor telah dikirim ke Google Sheets.');
+        localStorage.removeItem('LOCAL_LEADERBOARD');
+        onShowModal('Permintaan Dikirim', 'Perintah reset papan skor telah dikirim ke Google Sheets dan penyimpanan lokal.');
         setTimeout(loadAdminLeaderboard, 2500);
       } catch (e) {
         console.error(e);

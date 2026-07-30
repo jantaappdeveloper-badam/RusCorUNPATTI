@@ -213,53 +213,92 @@ export async function authenticateUser(inputUsername: string): Promise<User | nu
   return null;
 }
 
+export function processAndDeduplicateLeaderboard(entries: LeaderboardEntry[]): LeaderboardEntry[] {
+  const userMap = new Map<string, LeaderboardEntry>();
+
+  for (const entry of entries) {
+    if (!entry || (!entry.name && !entry.username)) continue;
+    const key = (entry.username || entry.name).toLowerCase().trim();
+    if (!key) continue;
+
+    const existing = userMap.get(key);
+    if (!existing) {
+      userMap.set(key, entry);
+    } else {
+      const isBetterScore = entry.score > existing.score;
+      const isSameScoreFaster = entry.score === existing.score && entry.timeSeconds < existing.timeSeconds;
+
+      if (isBetterScore || isSameScoreFaster) {
+        userMap.set(key, entry);
+      }
+    }
+  }
+
+  const result = Array.from(userMap.values());
+
+  result.sort((a, b) => {
+    if (b.score !== a.score) return b.score - a.score;
+    return a.timeSeconds - b.timeSeconds;
+  });
+
+  return result.map((item, idx) => ({
+    ...item,
+    rank: idx + 1,
+  }));
+}
+
 export async function fetchLeaderboard(): Promise<LeaderboardEntry[]> {
+  let remoteEntries: LeaderboardEntry[] = [];
+  let localEntries: LeaderboardEntry[] = [];
+
+  // Read local entries from localStorage
+  try {
+    const saved = localStorage.getItem('LOCAL_LEADERBOARD');
+    if (saved) {
+      localEntries = JSON.parse(saved);
+    }
+  } catch (e) {
+    localEntries = [];
+  }
+
   try {
     const res = await fetch(`${URL_LEADERBOARD}&t=${Date.now()}`, { cache: 'no-store' });
-    if (!res.ok) throw new Error('Leaderboard fetch failed');
-    const text = await res.text();
-    const rows = parseCSV(text);
+    if (res.ok) {
+      const text = await res.text();
+      const rows = parseCSV(text);
 
-    if (rows.length <= 1) {
-      return FALLBACK_LEADERBOARD;
+      if (rows.length > 1) {
+        for (let i = 1; i < rows.length; i++) {
+          const row = rows[i];
+          if (!row || (!row[1] && !row[3])) continue;
+
+          const name = row[1] || row[3] || 'Peserta';
+          const username = row[3] || row[1] || 'user';
+          const score = parseInt(row[4], 10) || 0;
+          const totalQuestions = parseInt(row[5], 10) || 10;
+          const timeSeconds = parseInt(row[6], 10) || 0;
+          const date = row[8] || new Date().toLocaleDateString('id-ID');
+
+          remoteEntries.push({
+            rowIndex: i + 1,
+            name,
+            username,
+            score,
+            totalQuestions,
+            timeSeconds,
+            date,
+          });
+        }
+      }
     }
-
-    const entries: LeaderboardEntry[] = [];
-    for (let i = 1; i < rows.length; i++) {
-      const row = rows[i];
-      if (!row || (!row[1] && !row[3])) continue;
-
-      const name = row[1] || row[3] || 'Peserta';
-      const username = row[3] || row[1] || 'user';
-      const score = parseInt(row[4], 10) || 0;
-      const totalQuestions = parseInt(row[5], 10) || 10;
-      const timeSeconds = parseInt(row[6], 10) || 0;
-      const date = row[8] || new Date().toLocaleDateString('id-ID');
-
-      entries.push({
-        rowIndex: i + 1,
-        name,
-        username,
-        score,
-        totalQuestions,
-        timeSeconds,
-        date,
-      });
-    }
-
-    if (entries.length === 0) {
-      return FALLBACK_LEADERBOARD;
-    }
-
-    // Sort descending by score, then ascending by time
-    entries.sort((a, b) => {
-      if (b.score !== a.score) return b.score - a.score;
-      return a.timeSeconds - b.timeSeconds;
-    });
-
-    return entries.map((entry, idx) => ({ ...entry, rank: idx + 1 }));
   } catch (error) {
-    console.warn('Leaderboard CSV fetch error, returning fallback leaderboard:', error);
+    console.warn('Leaderboard CSV fetch error:', error);
+  }
+
+  const combined = [...remoteEntries, ...localEntries];
+  if (combined.length === 0) {
     return FALLBACK_LEADERBOARD;
   }
+
+  return processAndDeduplicateLeaderboard(combined);
 }

@@ -108,6 +108,48 @@ export default function App() {
 
     const gradeObj = calculateRussianGrade(finalScore, answers.length, totalTimeSeconds);
 
+    // Update local leaderboard in localStorage (Highest score retention per user)
+    if (currentUser && !currentUser.isAdmin) {
+      try {
+        let localScores: any[] = [];
+        const saved = localStorage.getItem('LOCAL_LEADERBOARD');
+        if (saved) {
+          localScores = JSON.parse(saved);
+        }
+
+        const userKey = (currentUser.username || currentUser.namaLengkap).toLowerCase().trim();
+        const existingIdx = localScores.findIndex(
+          (e) => (e.username || e.name || '').toLowerCase().trim() === userKey
+        );
+
+        const newEntry = {
+          name: currentUser.namaLengkap,
+          username: currentUser.username,
+          score: finalScore,
+          totalQuestions: answers.length,
+          timeSeconds: totalTimeSeconds,
+          date: new Date().toLocaleString('id-ID'),
+        };
+
+        if (existingIdx >= 0) {
+          const existing = localScores[existingIdx];
+          const isBetterScore = finalScore > existing.score;
+          const isSameScoreFaster = finalScore === existing.score && totalTimeSeconds < existing.timeSeconds;
+
+          if (isBetterScore || isSameScoreFaster) {
+            localScores[existingIdx] = newEntry; // Replace old lower score
+          }
+          // If new score is lower or equal, keep the higher score!
+        } else {
+          localScores.push(newEntry);
+        }
+
+        localStorage.setItem('LOCAL_LEADERBOARD', JSON.stringify(localScores));
+      } catch (err) {
+        console.error('Error updating local leaderboard:', err);
+      }
+    }
+
     // Automatically send score to Google Sheets if GAS Web App URL is provided and user is not admin
     if (gasWebAppUrl && currentUser && !currentUser.isAdmin) {
       try {
