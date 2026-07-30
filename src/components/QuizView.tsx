@@ -302,13 +302,8 @@ export const QuizView: React.FC<QuizViewProps> = ({
 
       {/* Main Question Card - Vibrant Palette Signature White Card */}
       <div className="vibrant-card p-6 md:p-8 relative overflow-hidden bg-white border border-slate-200 rounded-2xl shadow-sm">
-        {/* Cyrillic decorative watermark */}
-        <div className="absolute top-4 right-6 text-6xl font-serif text-slate-100 font-black pointer-events-none select-none">
-          № {currentIndex + 1}
-        </div>
-
         {/* Category Header */}
-        <div className="flex flex-wrap items-center justify-between gap-2 mb-4 pb-3 border-b border-slate-100">
+        <div className="relative z-10 flex flex-wrap items-center justify-between gap-2 mb-4 pb-3 border-b border-slate-100">
           <span className="text-[#4F46E5] font-extrabold text-xs uppercase bg-indigo-50 px-3 py-1 rounded-md border border-indigo-100 flex items-center gap-1.5">
             <FolderCheck className="w-3.5 h-3.5 text-[#4F46E5]" />
             <span>{currentCatInfo.categoryName}</span>
@@ -319,7 +314,12 @@ export const QuizView: React.FC<QuizViewProps> = ({
           </span>
         </div>
 
-        <div className="min-h-[90px] flex items-center my-2">
+        {/* Cyrillic decorative watermark placed at bottom-right away from headers */}
+        <div className="absolute bottom-2 right-4 text-6xl md:text-7xl font-serif text-slate-100/50 font-black pointer-events-none select-none z-0">
+          № {currentIndex + 1}
+        </div>
+
+        <div className="min-h-[90px] flex items-center my-2 relative z-10">
           <h2 className="text-[#0F172A] text-lg md:text-xl font-extrabold leading-snug tracking-tight">
             {currentQ.question}
           </h2>
