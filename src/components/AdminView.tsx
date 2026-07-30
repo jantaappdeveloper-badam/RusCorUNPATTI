@@ -414,64 +414,80 @@ export const AdminView: React.FC<AdminViewProps> = ({
     onShowModal('Konfigurasi Disimpan', 'URL Google Apps Script telah diperbarui!');
   };
 
-  const handleDeleteRow = async (rowIndex: number) => {
+  const handleDeleteRow = async (entry: LeaderboardEntry, idx: number) => {
     soundEngine.playClickSound();
 
-    if (!inputUrl.trim()) {
-      onShowModal(
-        'URL Belum Diatur',
-        'Silakan atur URL Google Apps Script Web App terlebih dahulu untuk melakukan modifikasi database!'
-      );
-      return;
-    }
+    const targetName = entry.name || entry.username || `Baris ${idx + 1}`;
 
-    if (window.confirm(`Yakin ingin menghapus baris ke-${rowIndex} di Google Sheets?`)) {
+    if (window.confirm(`Yakin ingin menghapus peserta "${targetName}" dari papan skor?`)) {
+      // Remove from local storage
       try {
-        await fetch(inputUrl, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'text/plain' },
-          body: JSON.stringify({ action: 'deleteRow', rowIndex }),
-        });
-        onShowModal('Permintaan Dikitim', 'Perintah hapus telah dikirim ke Google Sheets.');
-        setTimeout(loadAdminLeaderboard, 2500);
+        const saved = localStorage.getItem('LOCAL_LEADERBOARD');
+        if (saved) {
+          let localEntries: LeaderboardEntry[] = JSON.parse(saved);
+          const targetKey = (entry.username || entry.name || '').toLowerCase().trim();
+          localEntries = localEntries.filter(
+            (e) => (e.username || e.name || '').toLowerCase().trim() !== targetKey
+          );
+          localStorage.setItem('LOCAL_LEADERBOARD', JSON.stringify(localEntries));
+        }
       } catch (e) {
-        console.error(e);
-        onShowModal('Gagal', 'Terjadi kesalahan saat menghubungi server Google Apps Script.');
+        console.error('Error updating local storage:', e);
       }
+
+      // If GAS URL is configured, send request to Google Sheets as well
+      if (inputUrl.trim()) {
+        try {
+          const rowIndex = entry.rowIndex || idx + 2;
+          await fetch(inputUrl.trim(), {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'text/plain' },
+            body: JSON.stringify({ action: 'deleteRow', rowIndex }),
+          });
+          onShowModal('Data Dihapus', `Data "${targetName}" berhasil dihapus dari penyimpanan lokal dan Google Sheets.`);
+        } catch (e) {
+          console.error(e);
+          onShowModal('Data Dihapus', `Data "${targetName}" berhasil dihapus dari papan skor lokal.`);
+        }
+      } else {
+        onShowModal('Data Dihapus', `Data "${targetName}" berhasil dihapus dari papan skor.`);
+      }
+
+      setTimeout(loadAdminLeaderboard, 300);
     }
   };
 
   const handleResetBoard = async () => {
     soundEngine.playClickSound();
 
-    if (!inputUrl.trim()) {
-      onShowModal(
-        'URL Belum Diatur',
-        'Silakan atur URL Google Apps Script Web App terlebih dahulu untuk melakukan modifikasi database!'
-      );
-      return;
-    }
-
     if (
       window.confirm(
-        'PERINGATAN! Yakin ingin MENGHAPUS SEMUA data papan skor di Google Sheets? Tindakan ini tidak dapat dibatalkan.'
+        'PERINGATAN! Yakin ingin MENGHAPUS SEMUA data papan skor? Tindakan ini tidak dapat dibatalkan.'
       )
     ) {
-      try {
-        await fetch(inputUrl, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'text/plain' },
-          body: JSON.stringify({ action: 'resetBoard' }),
-        });
-        localStorage.removeItem('LOCAL_LEADERBOARD');
-        onShowModal('Permintaan Dikirim', 'Perintah reset papan skor telah dikirim ke Google Sheets dan penyimpanan lokal.');
-        setTimeout(loadAdminLeaderboard, 2500);
-      } catch (e) {
-        console.error(e);
-        onShowModal('Gagal', 'Terjadi kesalahan saat menghubungi server Google Apps Script.');
+      // Clear local storage
+      localStorage.removeItem('LOCAL_LEADERBOARD');
+
+      // If GAS URL is configured, send reset request to Google Sheets
+      if (inputUrl.trim()) {
+        try {
+          await fetch(inputUrl.trim(), {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'text/plain' },
+            body: JSON.stringify({ action: 'resetBoard' }),
+          });
+          onShowModal('Papan Skor Dibersihkan', 'Semua data papan skor telah berhasil dihapus dari penyimpanan lokal dan Google Sheets.');
+        } catch (e) {
+          console.error(e);
+          onShowModal('Papan Skor Dibersihkan', 'Semua data papan skor lokal berhasil dibersihkan.');
+        }
+      } else {
+        onShowModal('Papan Skor Dibersihkan', 'Semua data papan skor berhasil dibersihkan.');
       }
+
+      setTimeout(loadAdminLeaderboard, 300);
     }
   };
 
@@ -638,9 +654,9 @@ export const AdminView: React.FC<AdminViewProps> = ({
                       <td className="px-3.5 py-2 text-center text-[#0F172A] font-mono font-bold">{row.timeSeconds}s</td>
                       <td className="px-3.5 py-2 text-right">
                         <button
-                          onClick={() => handleDeleteRow(row.rowIndex || idx + 2)}
-                          className="p-1.5 rounded-md bg-rose-50 hover:bg-rose-100 text-rose-700 transition-colors border border-rose-200"
-                          title="Hapus Baris Ini"
+                          onClick={() => handleDeleteRow(row, idx)}
+                          className="p-1.5 rounded-md bg-rose-50 hover:bg-rose-100 text-rose-700 transition-colors border border-rose-200 cursor-pointer"
+                          title="Hapus Peserta Ini"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
                         </button>
